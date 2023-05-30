@@ -5,25 +5,25 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const remarkIconPlugin = require('./src/plugins/remark/iconPlugin');
-const remarkPlacePlugin = require('./src/plugins/remark/placePlugin');
+const remarkMapPlugin = require('./src/plugins/remark/mapPlugin');
 const remarkPricePlugin = require('./src/plugins/remark/pricePlugin');
 const remarkTelephonePlugin = require('./src/plugins/remark/telephonePlugin');
 
 const remarkPlugins = [
   remarkIconPlugin,
-  remarkPlacePlugin,
+  remarkMapPlugin,
   remarkPricePlugin,
   remarkTelephonePlugin,
 ];
 
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
-  title: 'Самарканд: справочник релоканта',
+  title: 'в Самарканде',
+  titleDelimiter: ' ',
   url: 'https://samarkand-guide.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
 
   organizationName: 'megahertz',
   projectName: 'samarkand-guide',
@@ -31,6 +31,25 @@ module.exports = {
   i18n: { defaultLocale: 'ru', locales: ['ru'] },
 
   plugins: ['docusaurus-plugin-image-zoom'],
+
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: { href: '/favicon.ico', rel: 'icon', sizes: 'any' },
+    },
+    {
+      tagName: 'link',
+      attributes: { href: '/img/logo.svg', rel: 'icon', type: 'image/svg+xml' },
+    },
+    {
+      tagName: 'link',
+      attributes: { href: '/img/logo-180.png', rel: 'apple-touch-icon' },
+    },
+    {
+      tagName: 'link',
+      attributes: { href: '/manifest.webmanifest', rel: 'manifest' },
+    },
+  ],
 
   presets: [
     [
@@ -68,6 +87,20 @@ module.exports = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      metadata: [
+        {
+          name: 'og:image',
+          content:
+            'https://samarkand-guide.com/assets/images/registan1-37b86e2df0da265624c14400c2940f68.jpg',
+        },
+        {
+          name: 'description',
+          content:
+            'Вся информация о Самарканде и Узбекистане для релокантов и ' +
+            'экспатов в одном месте. Виза, аренда, регистрация, работа, ' +
+            'медицина, детский сад и другая информация о Самарканде',
+        },
+      ],
       navbar: {
         title: 'SamGuide',
         logo: { alt: 'Samarkand Guide Logo', src: 'img/logo.svg' },
@@ -86,24 +119,45 @@ module.exports = {
         style: 'dark',
         links: [
           {
-            title: 'Разделы',
+            title: 'Справочник',
             items: [
-              { label: 'Справочник', to: 'docs/samarkand/' },
+              { label: 'Самарканд и Узбекистан', to: 'docs/samarkand/' },
+              { label: 'Виза и регистрация', to: 'docs/visa/' },
+              { label: 'Жилье', to: 'docs/apartment/' },
+              { label: 'Услуги', to: 'docs/services/communication' },
+              { label: 'Покупки', to: 'docs/purchases/' },
+              { label: 'Работа и бизнес', to: 'docs/occupation/' },
+              { label: 'Дети', to: 'docs/children/' },
+            ],
+          },
+          {
+            title: 'Другое',
+            items: [
               { label: 'Карта', to: 'map' },
               { label: 'Полезные ссылки', to: 'links' },
             ],
           },
-          {},
           {
-            title: 'Другое',
+            title: 'Проект',
             items: [
               {
                 label: 'Github',
                 href: 'https://github.com/megahertz/samarkand-guide',
               },
               {
-                label: 'Обсуждение',
-                href: 'https://github.com/megahertz/samarkand-guide/discussions',
+                html:
+                  '<a ' +
+                  'class="footer__link-item" ' +
+                  'href="https://t.me/samarkand_guide" ' +
+                  'target="_blank"' +
+                  '>' +
+                  '<img ' +
+                  'alt="telegram" ' +
+                  'height="16" ' +
+                  'src="/img/icons/telegram.svg" ' +
+                  'width="16"> ' +
+                  'Обсуждение' +
+                  '</a>',
               },
             ],
           },
@@ -111,7 +165,7 @@ module.exports = {
         copyright: `© ${new Date().getFullYear()} Самарканд: справочник релоканта`,
       },
       zoom: {
-        selector: '.markdown :not(a) > img',
+        selector: '.markdown :not(a) > img:not(.no-zoom)',
         background: {
           light: 'rgba(240, 240, 240, 0.9)',
           dark: 'rgb(50, 50, 50, 0.9)',

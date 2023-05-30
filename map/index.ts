@@ -1,20 +1,21 @@
-import { PropSidebarItem } from '@docusaurus/plugin-content-docs';
+import type { PropSidebarItem } from '@docusaurus/plugin-content-docs';
+import city from '@site/map/city';
 import {
+  filterItems,
   findItemById,
-  getChildPlaces,
+  getItemIcon,
   isPlace,
   mapItemToPlacemarkItems,
   mapItemToSidebarItem,
-} from '@site/src/pages/map/lib/helpers';
-import {
+} from '@site/map/lib/helpers';
+import type {
   MapCategory,
   MapItem,
   MapPlace,
   PlacemarkItem,
-} from '@site/src/pages/map/lib/types';
+} from '@site/map/lib/types';
 import cafe from './cafe';
 import children from './children';
-import communication from './communication';
 import finance from './finance';
 import market from './market';
 import transport from './transport';
@@ -23,12 +24,48 @@ const rootItem: MapCategory = {
   id: '',
   label: 'Карта Самарканда',
   type: 'category',
-  items: [cafe, market, finance, communication, transport, children],
+  items: [cafe, market, finance, transport, children, city],
 };
 
+export function getItemById(id: string): MapItem | null {
+  return findItemById(rootItem, id);
+}
+
+export function getItemsByTag(tag: string): MapItem[] {
+  return filterItems(rootItem, (item: MapPlace) => item.tags?.includes(tag));
+}
+
 export function getPlacesById(id: string): MapPlace[] {
-  const item = findItemById(rootItem, id);
-  return isPlace(item) ? [item as MapPlace] : getChildPlaces(item);
+  const item = getItemById(id);
+
+  if (item) {
+    if (isPlace(item)) {
+      return [item as MapPlace];
+    }
+
+    return (item as MapCategory).items.filter(
+      (child: MapCategory) => child.type !== 'category',
+    );
+  }
+
+  const taggedItems = getItemsByTag(id);
+  if (taggedItems.length > 0) {
+    return taggedItems;
+  }
+
+  throw new Error(`Can't find place #${id}`);
+}
+
+export function getPlacemarksByIdOrTag(idOrTag): PlacemarkItem[] {
+  const parentIcon = getItemIcon(rootItem, idOrTag);
+
+  const placemarks = [];
+  const places = [...getPlacesById(idOrTag), ...getItemsByTag(idOrTag)];
+  for (const place of places) {
+    placemarks.push(...mapItemToPlacemarkItems(place, { parentIcon }));
+  }
+
+  return placemarks;
 }
 
 export function getSidebarItems(currentUrl = 'none'): PropSidebarItem[] {

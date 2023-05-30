@@ -1,10 +1,12 @@
-import kindergartens from '@site/map/children/kindergartens';
-import { MapCategory } from '@site/src/pages/map/lib/types';
+import activities from '@site/map/children/activities';
+import kindergarten from '@site/map/children/kindergarten';
+import school from '@site/map/children/school';
+import type { MapCategory } from '@site/map/lib/types';
 
 export default {
   id: 'children',
-  items: [kindergartens],
+  items: [kindergarten, school, activities],
   icon: 'islands#darkBlueFamilyIcon',
   label: 'Дети',
   type: 'category',
-} as MapCategory;
+} satisfies MapCategory;

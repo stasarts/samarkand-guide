@@ -1,18 +1,19 @@
+import Head from '@docusaurus/Head';
 import { useLocation } from '@docusaurus/router';
 import SidebarStyles from '@docusaurus/theme-classic/lib/theme/DocPage/Layout/Sidebar/styles.module.css';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import { getPlacemarkItems, getSidebarItems } from '@site/map';
-import { placemarkMatchesUrl } from '@site/src/pages/map/lib/helpers';
+import { placemarkMatchesUrl } from '@site/map/lib/helpers';
 import DocSidebar from '@theme/DocSidebar';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React, { useEffect } from 'react';
-import FullMap from './components/FullMap';
+import { Map } from '../../components/map';
 import styles from './styles.module.css';
 
 const placemarks = getPlacemarkItems();
 
-export default function Map() {
+export default function MapPage() {
   const location = useLocation();
   useMenuHighlighting();
 
@@ -27,8 +28,14 @@ export default function Map() {
     <Layout
       noFooter
       title="Карта Самарканда"
+      description="Карта районов, ресторанов, магазинов и других мест Самарканда"
       wrapperClassName={styles.container}
     >
+      <Head>
+        <title>Карта Самарканда</title>
+        <meta property="og:title" content="Карта Самарканда" />
+      </Head>
+
       <main className={styles.main}>
         <aside
           className={clsx(
@@ -43,7 +50,7 @@ export default function Map() {
             path="/map"
           />
         </aside>
-        <FullMap placemarks={selectedPlacemarks} />
+        <Map placemarks={selectedPlacemarks} />
       </main>
     </Layout>
   );
